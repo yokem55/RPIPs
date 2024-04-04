@@ -11,10 +11,10 @@ requires: RPIP-33
 ---
 
 ## Abstract
-This RPIP is an attempt to shape the qualifications, duties, and expectations of security council members, as well as establish processes for their election, re-election or removal, and liveliness monitoring. 
+This RPIP sets the qualifications, duties, and expectations of Security Council members, as well as establish processes for their elections, terms, removals, and liveliness monitoring. 
 
 ## Motivation
-RPIP-33 establishes an on-chain governance mechanism for setting and alterting key protocol settings and variables. Most of those settings do not need to be changed in a time-sensivitve manner and can wait for a normal PDAO governance process to complete. However, to still allow rapid settings changes that might be needed in the event of a security incident so as to protect the protocol from (further) harm, RPIP-33 envisions allowing a "Security Council" to propose and vote to exececute a subset of the protocol settings in an immediate manner. However the selection and implementation of that Security council was intentionally left for future develoment.
+RPIP-33 establishes an on-chain governance mechanism for setting and alterting key Rocket Pool protocol settings and variables. Most of those settings do not need to be changed in a time-sensivitve manner and can wait for a normal PDAO governance process to complete. However, to still allow rapid settings changes that might be needed in the event of a security incident so as to protect the protocol from (further) harm, RPIP-33 envisions allowing a "Security Council" to propose and vote to exececute changes to a subset of the protocol settings in an immediate manner. However the selection and implementation of that Security council was intentionally left for future develoment.
 
 Per RPIP-33 (Implementation of an On-Chain pDAO):
 > Security Council membership is a serious role and the pDAO SHOULD develop strong entry requirements and processes for routinely flushing stale members. The development of these requirements and processes is left for a future RPIP. To begin with, the current pDAO guardian SHALL be the sole member.
@@ -25,10 +25,13 @@ This RPIP seeks to fulfill the development of those requirements and processes.
 ### Qualifications for prospective members
 Security council membership is a high commitment, high responsibility role, and should not be pursued lightly.
 
+In general - security council members must have the appropriate skills and capacity to *independently* assess and verify a potential security incident and be able to determine the suitability of a proposed settings change *without* reliance on the assessments of other members. 
+
 **Minimum Qualifications:**
-- Have a strong background in EVM blockchain security, safety practices and procedures.
+- Have a strong background in EVM blockchain security procedures and safety practices.
 - Ability to ask critical questions of a technical nature to better understand the underlying mechanics of blockchain transactions and events.
-- Thorough knowledge of the the normal behaviors of the Rocket Pool protocol.
+- Thorough knowledge of the the expected behaviors of the Rocket Pool protocol.
+- Ability to read and understand audit reports, bug bounty reports, and contract deployment verifications.
 - Familiarity with the the PDAO settings available to the Security Council for immediate execution, their intended behaviors, the potential circumstances for when they might be need to be changed and the implications for their usage.
 
 **Reccomended Qualifications:**
@@ -38,26 +41,27 @@ Security council membership is a high commitment, high responsibility role, and 
 - A long term presence and history in the Rocket Pool community.
 
 **Mandatory Disclosures**
-During the identity and alignement statement phases of an election, prospective members must disclose the following:
+During the identity and alignment statement phases of an election, prospective members must disclose the following:
 - Their identity status (one of):
   - Fully pseudonymous
   - Privately doxed to one or more publicly designated community member(s)
   - Fully and publicly doxed
-- What legal jurisdiction(s) they are subject to.
+- What legal jurisdiction(s) they are usually subject to.
 
 ### Member duty expectations
 - Members shall be available and able to respond in an "on call" manner, on a 24/7 basis, within `[a short period of time - an hour or two?]` of notification of a security incident necessitating security council action.
 - Members shall provide to the other members of the council and the core development team direct telephone number(s) that they can be reached at for notification of a security incident.
-- The security council shall not be a general policy making body. Its role is restricted to making appropriate protocol setting changes in response to  security incidents. Members are strongly encouraged to maintain a clear separation between their security council roles and any other PDAO policy advocacy they may engage in.
+- The security council shall not be a general policy making body. Its role is restricted to making appropriate protocol setting changes in response to  security incidents. Members must maintain a clear separation between their security council roles and any other PDAO policy advocacy they may engage in.
   
 ### Council duty expectations
 - The security council shall, no less then twice per year, perform drills to execute emergency protocol settings changes on a private testnet deployment of Rocket Pool. A public report describing the drill and its outcome shall be published by the council.
 - The security council shall publish postmortem reports in a timely manner regarding security incidents necessitating a protocol setting change, with as much detail as can be revealed without further security compromise.
-- On a roughly a monthly basis at an irregular and generally unpredictable interval, any member may begin a "Proof of keys" check by publicly posting a signed message including a recent mainnet Ethereum finalized blockhash in the message.  Within one day, all other members should also post a similar message. Should a member fail this liveliness check, the pDAO may move to vote to remove the member.
+- On a roughly a monthly basis, but at an irregular and generally unpredictable interval, the council shall perform a "proof of keys check". Any member may begin the check by publicly posting a signed message including a recent mainnet Ethereum finalized blockhash in the message.  Within one day, all other members should also post a similar message. Should a member fail this liveliness check, the pDAO may move to vote to remove the member.
 
 ### Size and composition
 - The security council shall be composed of not more than 10 members. Should the membership fall to 7 or fewer members via removal or resignation, the PDAO shall vote on invitations to complete the membership within 30 days.
-- Not more than 4 members shall be from the core development team or members of the ODAO, excluding the non-operator members of the "Rocket Scientists" ODAO seat.
+- Not more than 4 council members shall also be members of the core development team or members of the ODAO, excluding the non-operator members of the "Rocket Scientists" ODAO seat.
+- No more than 3 members may be fully pseudonymous without private doxxing to another community member. 
 
 ### Elections and terms
 Elections for the Security Council shall be conducted in two phases. The first phase establishes a roster of candidates equal to the number of vacancies (`n`) via an off chain election similar to management committee elections, complete with the nomination and identity and alignment statement process. The second phase then takes the top `n` vote winners from the first phase who are then proposed for invitation in an on-chain vote. Should not all `n` prospective members win an affirmative invitation in the on-chain PDAO vote, the process shall be repeated until the full membership is established. PDAO security council invitation proposals that did not go through the off-chain election process should be vetoed in most circumstances. 

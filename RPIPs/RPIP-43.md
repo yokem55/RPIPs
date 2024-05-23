@@ -20,7 +20,7 @@ This proposal drastically reduces the gas to add validators and distribute rewar
 ### Megapool Contracts
 
 This specification introduces a type of smart contract called a "megapool" that
-serves as the target of Beacon Chain withdrawal credentials for Rocket Pool
+SHALL serve as the target of Beacon Chain withdrawal credentials for Rocket Pool
 validators deposited after this RPIP is implemented.
 
 - A Node Operator SHALL be able to deploy at most one megapool contract
@@ -60,14 +60,72 @@ Node operators can manage the set of validators in their megapool:
 
 ### Funds Management
 
-This subsection needs some work. I think it should say who can trigger
-distribution of funds out of the megapool, whether those funds are pending
-deposits, rewards, or remaining principal. This is a non-trivial question since
-funds do not necessarily belong to the node operator. There could be a link out
-to another RPIP with the details.
-
-- A Node Operator SHALL be able to distribute rewards from all validators in their megapool at once
-  - This MAY be temporarily blocked while validators are exiting or pending removal
+- This RPIP assumes the continued use of separate 32 Ether validators. Support for
+  EIP-7251 'Max EB' validators will require additional specification and development.
+- The megapool SHALL track the total capital ownership of the validator(s) between
+  the node operator and the rETH stakers.
+- The megapool MUST distinguish between capital funds present in the contract and
+  rewards funds at all times.
+- A Node Operator SHALL be able to distribute rewards from all validators in their
+  megapool at once.
+- Rewards distribution MAY be temporarily blocked while validators are exiting or
+  pending removal.
+- There SHALL be a reward distribution function in the megapool
+  - When called, rewards from the node operator's bonded ETH SHALL be held in
+    the megapool as unclaimed node operator funds.
+  - When called, `node_operator_commission_share` of rewards SHALL be held in 
+      the megapool as unclaimed node operator funds.
+  - When called, `reth_share` of rewards SHALL be sent to the rETH contract
+  - When called, `voter_share` of rewards SHALL be sent to a merkle rewards
+    distributor contract
+  - When called, `surplus_share` of rewards SHALL be sent to the appropriate
+    surplus disposition contract
+  - This function SHALL allow any user to call it
+  - If called by the node operator, this function SHOULD claim all unclaimed
+    node operator funds
+- There SHALL be a capital distribution function in the megapool
+  - When called, capital from the node operator's bonded ETH that has been
+    released from exited validators SHALL be held in the megapool as unclaimed
+    node operator funds.
+  - When called, capital borrowed from the protocol that has been released from
+    exited validators SHALL be sent to the rETH contract.
+  - This function SHALL allow any user to call it following a mandatory time
+    delay configurable by the pDAO. The delay SHALL be initialized by a
+    `startUserDistribute` function. After the delay is complete, any user may
+    then call the capital distribution fuction.
+  - If called by the node operator
+    - This function SHOULD claim all unclaimed node operator funds
+    - This function SHALL be immediately callable without delay
+- There SHALL be a function to claim unclaimed node operator funds; when called
+  - If unclaimed node operator funds >= penalties
+    - unclaimed node operator funds SHALL be decreased by penalties
+    - penalties SHALL be set to 0
+  - If unclaimed node operator funds < penalties
+    - unclaimed node operator funds SHALL be set to 0
+    - penalties SHALL be decreased by unclaimed node operator funds
+  - Unclaimed node operator funds SHALL be transferred to the node operator's
+    withdrawal address
+  - Unclaimed node operator funds SHALL be set to 0
+- A Node Operator SHALL be able to withdraw unclaimed node operator funds to
+  their withdrawal address
+- A Node Operator MAY be able to use unclaimed node operator funds for redeposit
+  to the beacon chain.
+- In the event the rETH proportion of the withdrawn capital is insufficient
+  to fully repay the protocol borrowed capital, the shortfall SHALL be repaid
+  from the node operator's capital
+   - If the node operator's capital is insufficient to repay the shortfall, a
+     deficit balance of the shortfall SHALL be recorded
+- If there is a deficit balance > 0:
+   - Any future node operator rewards or capital distributions SHALL be deducted
+     from until the deficit is fully repaid.
+   - There SHALL be a function that allows anyone to directly repay a deficit.
+   - Deficit repayments SHALL be transferred to the rETH contract
+- Newly deposited capital that is awaiting deposit to the beacon chain SHALL be
+  excluded from capital distribution, but rather be subject to separate functions
+  for `prestake` and `stake` transactions.
+- The megapool MAY be used as the node operator's authorized fee recipient for
+  execution layer rewards if they are not opted into the smoothing pool. These
+  funds shall be subject to rewards distribution.
 
 ### RPL Staking
 
